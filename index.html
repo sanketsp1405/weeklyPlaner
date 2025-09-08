@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekly Study Planner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;400&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+      font-family: 'Roboto', Arial, sans-serif;
+      position: relative;
+      overflow-x: hidden;
+    }
+    .planner-bg-svg {
+      position: absolute;
+      top: -80px;
+      left: -80px;
+      z-index: 0;
+      opacity: 0.18;
+      width: 400px;
+      height: 400px;
+      pointer-events: none;
+    }
+    .planner-bg-svg2 {
+      position: absolute;
+      bottom: -100px;
+      right: -100px;
+      z-index: 0;
+      opacity: 0.13;
+      width: 420px;
+      height: 420px;
+      pointer-events: none;
+    }
+    #weekly-planner {
+      position: relative;
+      z-index: 1;
+      padding: 3rem 1rem 2rem 1rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.95);
+      border-radius: 2rem;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+      border: 1.5px solid #e0e7ff;
+      margin-top: 3rem;
+      margin-bottom: 3rem;
+    }
+    .planner-title {
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #4338ca;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+      text-shadow: 0 2px 8px #c7d2fe;
+    }
+    .planner-title svg {
+      width: 2.2rem;
+      height: 2.2rem;
+      vertical-align: middle;
+    }
+    .planner-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: #fff;
+      border-radius: 1.2rem;
+      overflow: hidden;
+      box-shadow: 0 2px 12px 0 rgba(67,56,202,0.07);
+      margin-bottom: 1.5rem;
+    }
+    .planner-table th {
+      background: linear-gradient(90deg, #6366f1 0%, #818cf8 100%);
+      color: #fff;
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 1rem 0.5rem;
+      border: none;
+    }
+    .planner-table td {
+      padding: 0.8rem 0.5rem;
+      font-size: 1rem;
+      border-bottom: 1px solid #e0e7ff;
+      background: #fff;
+      transition: background 0.2s;
+    }
+    .planner-table tr:last-child td {
+      border-bottom: none;
+    }
+    .planner-table tr.bg-gray-100 td {
+      background: linear-gradient(90deg, #f3f4f6 0%, #e0e7ff 100%);
+      font-style: italic;
+      color: #6366f1;
+      font-weight: 500;
+      font-size: 1.05rem;
+    }
+    .planner-table input[type="checkbox"] {
+      width: 1.2em;
+      height: 1.2em;
+      accent-color: #6366f1;
+      border-radius: 0.3em;
+      box-shadow: 0 1px 3px #c7d2fe44;
+      transition: box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .planner-table input[type="checkbox"]:hover {
+      box-shadow: 0 0 0 2px #6366f1;
+    }
+    .planner-table td.font-semibold {
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-weight: 600;
+      color: #3730a3;
+      letter-spacing: 0.2px;
+    }
+    .reset-btn {
+      padding: 0.8rem 2.5rem;
+      background: linear-gradient(90deg, #ef4444 0%, #f59e42 100%);
+      color: #fff;
+      border: none;
+      border-radius: 1.5rem;
+      font-size: 1.1rem;
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-weight: 700;
+      box-shadow: 0 2px 8px 0 #fca5a5aa;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      margin-top: 1.5rem;
+    }
+    .reset-btn:hover {
+      background: linear-gradient(90deg, #f59e42 0%, #ef4444 100%);
+      transform: scale(1.04);
+      box-shadow: 0 4px 16px 0 #fca5a5cc;
+    }
+    @media (max-width: 900px) {
+      #weekly-planner { padding: 1.5rem 0.2rem; }
+      .planner-title { font-size: 2rem; }
+      .planner-table th, .planner-table td { font-size: 0.95rem; padding: 0.5rem 0.2rem; }
+    }
+    @media (max-width: 600px) {
+      .planner-title { font-size: 1.3rem; }
+      .planner-table th, .planner-table td { font-size: 0.8rem; padding: 0.3rem 0.1rem; }
+      #weekly-planner { border-radius: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Decorative SVGs -->
+  <svg class="planner-bg-svg" viewBox="0 0 400 400" fill="none"><circle cx="200" cy="200" r="200" fill="url(#paint0_radial)"/><defs><radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientTransform="translate(200 200) scale(200)" gradientUnits="userSpaceOnUse"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#818cf8" stop-opacity="0.2"/></radialGradient></defs></svg>
+  <svg class="planner-bg-svg2" viewBox="0 0 420 420" fill="none"><ellipse cx="210" cy="210" rx="210" ry="210" fill="url(#paint1_radial)"/><defs><radialGradient id="paint1_radial" cx="0" cy="0" r="1" gradientTransform="translate(210 210) scale(210)" gradientUnits="userSpaceOnUse"><stop stop-color="#f59e42"/><stop offset="1" stop-color="#fca5a5" stop-opacity="0.13"/></radialGradient></defs></svg>
+
+  <section id="weekly-planner">
+    <div class="planner-title">
+      <svg fill="none" viewBox="0 0 32 32"><rect x="4" y="6" width="24" height="20" rx="4" fill="#6366f1"/><rect x="8" y="2" width="2" height="8" rx="1" fill="#f59e42"/><rect x="22" y="2" width="2" height="8" rx="1" fill="#f59e42"/><rect x="4" y="10" width="24" height="2" fill="#fff"/><rect x="8" y="14" width="4" height="4" rx="1" fill="#fff"/><rect x="14" y="14" width="4" height="4" rx="1" fill="#fff"/><rect x="20" y="14" width="4" height="4" rx="1" fill="#fff"/></svg>
+      Weekly Study Planner
+    </div>
+    <table class="planner-table">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Task</th>
+          <th>Mon</th>
+          <th>Tue</th>
+          <th>Wed</th>
+          <th>Thu</th>
+          <th>Fri</th>
+          <th>Sat</th>
+          <th>Sun</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="p-3">10:00 – 12:00</td>
+          <td class="p-3 font-semibold">Java Revision</td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td class="p-3">12:00 – 1:30</td>
+          <td class="p-3 font-semibold">Coding Practice (DSA)</td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td>
+        </tr>
+        <tr class="bg-gray-100">
+          <td colspan="9">☕ Break #1 (1:30 – 2:00)</td>
+        </tr>
+        <tr>
+          <td class="p-3">2:00 – 3:30</td>
+          <td class="p-3 font-semibold">Docker</td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td class="p-3">3:30 – 5:00</td>
+          <td class="p-3 font-semibold">AWS</td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td>
+        </tr>
+        <tr class="bg-gray-100">
+          <td colspan="9">🍪 Break #2 (5:00 – 5:30)</td>
+        </tr>
+        <tr>
+          <td class="p-3">5:30 – 6:00</td>
+          <td class="p-3 font-semibold">HTML + CSS + JS</td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td class="p-3">6:00 – 6:30</td>
+          <td class="p-3 font-semibold">Angular</td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td class="p-3">6:30 – 7:00</td>
+          <td class="p-3 font-semibold">MySQL</td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td class="p-3">7:00 – 8:30</td>
+          <td class="p-3 font-semibold">Coding Practice (LeetCode)</td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td>
+        </tr>
+        <tr class="bg-gray-100">
+          <td colspan="9">🍵 Break #3 (8:30 – 9:00)</td>
+        </tr>
+        <tr>
+          <td class="p-3">9:00 – 9:45</td>
+          <td class="p-3 font-semibold">Aptitude Practice</td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td class="p-3">9:45 – 10:15</td>
+          <td class="p-3 font-semibold">English Communication</td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td>
+        </tr>
+        <tr>
+          <td class="p-3">10:15 – 10:30</td>
+          <td class="p-3 font-semibold">Daily Revision</td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td><td><input type="checkbox"></td>
+          <td><input type="checkbox"></td>
+        </tr>
+      </tbody>
+
+    </table>
+    <div style="text-align:center;">
+      <button onclick="resetPlanner()" class="reset-btn">
+        <svg style="vertical-align:middle;margin-right:0.5em;" width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M2 12a10 10 0 1 1 3.29 7.29" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12V7m0 5h5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Reset Week
+      </button>
+    </div>
+  </section>
+  <script>
+    function resetPlanner() {
+      document.querySelectorAll('#weekly-planner input[type="checkbox"]').forEach(cb => cb.checked = false);
+    }
+  </script>
+</body>
+</html>
